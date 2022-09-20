@@ -7,9 +7,6 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "nodemon server/index.js"
-  },
-  "dependencies": {
-    "nodemon": "^2.0.20"
+    "start": "node server/index.js"
   }
 }
