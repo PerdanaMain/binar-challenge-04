@@ -2,24 +2,6 @@ class Car {
   constructor(cars) {
     this.cars = cars;
   }
-  filterCarAvailable(cars) {
-    const result = [];
-    for (let i = 0; i < cars.length; i++) {
-      if (cars[i].available) {
-        result.push(cars[i]);
-      }
-    }
-    return result;
-  }
-  filterCarNotAvailable(cars) {
-    const result = [];
-    for (let i = 0; i < cars.length; i++) {
-      if (cars[i].available === false) {
-        result.push(cars[i]);
-      }
-    }
-    return result;
-  }
   filterCarBySelected() {
     let driver = document.getElementById("driver").value;
     let date = document.getElementById("tanggal").value;
@@ -27,95 +9,85 @@ class Car {
 
     let capacity = document.getElementById("jmlPenumpang").value;
 
-    if (driver === undefined || driver == "") {
-      alert("Please select a driver");
-    } else if (driver.value === "dengan-supir") {
-      return this.filterCarAvailable(this.cars);
-    } else if (driver.value === "tanpa-supir") {
-      return this.filterCarNotAvailable(this.cars);
-    } else if (dateTime === undefined || dateTime === "") {
-      alert("Please select Date and Time");
-    } else if (capacity == "" && driver.value == "dengan-supir") {
-      return this.cars.filter((mobil) => {
-        mobil.available === true && mobil.availableAt <= dateTime;
-      });
-    } else if (capacity != "" && driver.value == "dengan-supir") {
-      return this.cars.filter(
-        (mobil) =>
-          mobil.available === true &&
-          mobil.capacity >= capacity &&
-          mobil.availableAt <= dateTime
-      );
-    } else if (capacity == "" && driver.value == "tanpa-supir") {
-      return this.cars.filter(
-        (mobil) => mobil.available === false && mobil.availableAt <= dateTime
-      );
-    } else if (capacity != "" && driver.value == "tanpa-supir") {
-      return this.cars.filter(
-        (mobil) =>
-          mobil.available === false &&
-          mobil.capacity >= capacity &&
-          mobil.availableAt <= dateTime
-      );
+    if (driver == "" || driver == undefined) {
+      alert("Please Select Driver Type");
+    } else if (date == "" || date == undefined) {
+      alert("Please Select the date");
+    } else if (time == "" || time == undefined) {
+      alert("Please Select The Time");
+    } else if (driver == "dengan-supir") {
+      const result = [];
+      for (let i = 0; i < this.cars.length; i++) {
+        let x = date.slice(0, 4);
+        if (
+          this.cars[i].available &&
+          this.cars[i].year >= x &&
+          this.cars[i].capacity >= capacity
+        ) {
+          result.push(this.cars[i]);
+        }
+      }
+      return result;
+    } else if (driver == "tanpa-supir") {
+      const result = [];
+      for (let i = 0; i < this.cars.length; i++) {
+        let x = date.slice(0, 4);
+        if (
+          this.cars[i].available &&
+          this.cars[i].year >= x &&
+          this.cars[i].capacity >= capacity
+        ) {
+          result.push(this.cars[i]);
+        }
+      }
+      return result;
     }
   }
 }
 
-// const XMLHttpRequest = require('xhr2');
-
-// Ambil data dari cars.min.js
 let xmlHttp = new XMLHttpRequest();
 xmlHttp.open("GET", "http://localhost:3000/cars", false);
 xmlHttp.send(null); // Request body null
 
-const listCar = JSON.parse(xmlHttp.responseText);
-console.log(listCar);
 
-// Initiate obj
-const car = new Car(listCar);
+// Initiate obj Car
+let cars = new Car(JSON.parse(xmlHttp.responseText));
 
-// Ambil button search
-const btnSearch = document
+// Ambil id carsList
+let app = document.getElementById("carsList");
+
+let btnSearch = document
   .getElementById("btn-search")
-  .addEventListener("click", () => {
-    document.getElementById("halo").innerHTML = "Halo from backend";
-  });
-
-const cobaInner = () => {
-  let tes = (document.getElementById("halo").innerHTML = "Halo From Backend");
-};
-
-function getCars() {
-  let htmlData = "";
-  data = cars;
+  .addEventListener("click", ()=>{
+  let text = "";
+  let data = cars.filterCarBySelected();
   if (data === "" || data === undefined) {
-    htmlData = "";
-    app.innerHTML = htmlData;
+    text = "";
+    app.innerHTML = text;
     return;
   } else {
     for (let index = 0; index < data.length; index++) {
       let car = data[index];
-
-      htmlData += `
-            <div class="col m-2">
-                <div class="card" style="width: 20rem; height: 450px">
-                <img src="${car.image}"" class="img-fluid card-img-top " alt="${car.manufacture}" style="object-fit: scale-down; height: 200px; ">
-                <div class="card-body" style="font-size: 14px;">
-                    <p class="card-title">${car.manufacture} ${car.model}</p>
-                    <p class="fw-bold">Rp. ${car.rentPerDay} / hari</p>
-                    <p class="card-text" style="height: 85px">${car.description}</p>
-                    <div class=""><i class="bi bi-people me-2"></i>${car.capacity} Orang</div>
-                    <div class=""><i class="bi bi-gear me-2"></i>${car.transmission}</div>
-                    <div class=""><i class="bi bi-calendar4 me-2"></i>${car.year}</div>
-                    <a href="#" class="btn bg-button text-white w-100 mt-2 fw-bold mt-4" style="font-size: 14px;">Pilih Mobil</a>
-                </div>
-                </div>
-            </div>
-            `;
+      text += `
+      <div class="col-md">
+        <div class="card" style="width: 18rem;">
+          <img src="${car.image}" class="card-img-top" alt="${car.manufacture}">
+          <div class="card-body">
+            <h5 class="card-title">${car.manufacture} ${car.model}</h5>
+            <p class="fsw-bold">Rp. ${car.rentPerDay} / hari</p>
+            <p class="card-text">${car.description}</p>
+            <div class=""><i class="me-2"></i>${car.capacity} Orang</div>
+            <div class=""><i class="me-2"></i>${car.transmission}</div>
+            <div class=""><i class="me-2"></i>${car.year}</div>
+            <a href="" class="btn btn-success w-100 mt-2 fw-bold" style="font-size: 14px;">Pilih Mobil</a>
+          </div>
+        </div>
+      </div>
+      `;
     }
-    app.innerHTML = htmlData;
-    if (htmlData == "") {
-      alert("No car available");
+    app.innerHTML = text;
+    if (text == "") {
+      document.getElementById("notMatch").innerHTML = "No Car Found!"
     }
   }
-}
+  });
