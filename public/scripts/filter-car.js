@@ -74,7 +74,7 @@ let btnSearch = document
           <img src="${car.image}" class="card-img-top" alt="${car.manufacture}">
           <div class="card-body">
             <h5 class="card-title">${car.manufacture} ${car.model}</h5>
-            <p class="fsw-bold">Rp. ${car.rentPerDay} / hari</p>
+            <p class="fst fst-bold">Rp. ${car.rentPerDay} / hari</p>
             <p class="card-text">${car.description}</p>
             <div class=""><i class="me-2"></i>${car.capacity} Orang</div>
             <div class=""><i class="me-2"></i>${car.transmission}</div>
