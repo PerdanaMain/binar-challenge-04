@@ -24,8 +24,8 @@ class Car {
     let driver = document.getElementById("driver").value;
     let date = document.getElementById("tanggal").value;
     let time = document.getElementById("jemput").value;
-    let dateTime = date + time;
-    var capacity = document.getElementById("jmlPenumpang").value;
+
+    let capacity = document.getElementById("jmlPenumpang").value;
 
     if (driver === undefined || driver == "") {
       alert("Please select a driver");
@@ -61,31 +61,33 @@ class Car {
   }
 }
 
-let btnFilterCar = document
-  .getElementById("btnFilterCar")
-  .addEventListener("click", getCars);
+// const XMLHttpRequest = require('xhr2');
 
-function getDateTimeNow() {
-  let today = new Date();
-  let date =
-    today.getFullYear() +
-    "-" +
-    String(today.getMonth() + 1).padStart(2, "0") +
-    "-" +
-    String(today.getDate()).padStart(2, "0");
-  let time =
-    String(today.getHours()).padStart(2, "0") +
-    ":" +
-    String(today.getMinutes()).padStart(2, "0") +
-    ":" +
-    String(today.getSeconds()).padStart(2, "0");
-  let dateNow = date + "T" + time + ".000Z";
-  return dateNow;
-}
+// Ambil data dari cars.min.js
+let xmlHttp = new XMLHttpRequest();
+xmlHttp.open("GET", "http://localhost:3000/cars", false);
+xmlHttp.send(null); // Request body null
+
+const listCar = JSON.parse(xmlHttp.responseText);
+console.log(listCar);
+
+// Initiate obj
+const car = new Car(listCar);
+
+// Ambil button search
+const btnSearch = document
+  .getElementById("btn-search")
+  .addEventListener("click", () => {
+    document.getElementById("halo").innerHTML = "Halo from backend";
+  });
+
+const cobaInner = () => {
+  let tes = (document.getElementById("halo").innerHTML = "Halo From Backend");
+};
 
 function getCars() {
   let htmlData = "";
-  data = cars.filtermobil();
+  data = cars;
   if (data === "" || data === undefined) {
     htmlData = "";
     app.innerHTML = htmlData;

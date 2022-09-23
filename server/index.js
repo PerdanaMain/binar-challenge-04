@@ -55,19 +55,26 @@ http
       const fileStream = fs.createReadStream(imagePath);
       res.writeHead(200, { "Content-Type": "image/png" });
       fileStream.pipe(res);
-    } else if (req.url === "/getcars") {
-      const dataPath = path.join(__dirname, "../data", "/cars.json");
-      const fileStream = fs.createReadStream(dataPath, "UTF-8");
-      res.writeHead(200, { "Content-Type": "application/json" });
-      fileStream.pipe(res);
-    } else if (req.url === "/api/cars") {
+    } else if (req.url === "/cars") {
       res.setHeader("Content-Type", "application/json");
       res.writeHead(200);
       res.end(JSON.stringify(cars));
     } else {
-      res.writeHead(404);
-      res.write("<h1>404: File Not Found</h1>");
-      res.end();
+      const renderHTML = fs.readFile(
+        "./public/404-handling.html",
+        "utf8",
+        (err, data) => {
+          if (err) {
+            res.writeHead(404);
+            res.write(
+              "<center style='margin-top: 100px ' ><h2>404: File Not Found</h2></center>"
+            );
+          } else {
+            res.write(data);
+          }
+          res.end();
+        }
+      );
     }
   })
   .listen(port, () => {
